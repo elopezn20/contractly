@@ -16,6 +16,7 @@ class CreateContractorBody(BaseModel):
     tax_id: str = Field(..., min_length=1)
     main_contact: str = Field(..., min_length=1)
     certifications: List[str] = []
+    years_of_experience: int = Field(..., ge=0)
 
 
 class ContractorOut(BaseModel):
@@ -25,10 +26,6 @@ class ContractorOut(BaseModel):
     main_contact: str
     certifications: List[str]
     status: PrequalificationStatus
-
-
-class PrequalifyBody(BaseModel):
-    yearsOfExperience: int = Field(..., ge=0)
 
 
 def make_router(
@@ -44,6 +41,7 @@ def make_router(
                 tax_id=body.tax_id,
                 main_contact=body.main_contact,
                 certifications=body.certifications,
+                years_of_experience=body.years_of_experience,
             )
             return ContractorOut(
                 id=c.id,
@@ -76,11 +74,9 @@ def make_router(
         response_model=ContractorOut,
         status_code=200,
     )
-    def prequalify(contractor_id: str, body: PrequalifyBody):
+    def prequalify(contractor_id: str):
         try:
-            c = prequalify_uc.execute(
-                contractor_id=contractor_id, years_of_experience=body.yearsOfExperience
-            )
+            c = prequalify_uc.execute(contractor_id=contractor_id)
             return ContractorOut(
                 id=c.id,
                 business_name=c.business_name,
@@ -100,7 +96,7 @@ def make_router(
             "APPROVED": 0,
             "REJECTED": 0,
             "PENDING": 0,
-            "NONE": 0,
+            "UNASSESSED": 0,
         }
         for c in items:
             counts[c.status.value] += 1
@@ -109,7 +105,7 @@ def make_router(
             "approved": counts["APPROVED"],
             "rejected": counts["REJECTED"],
             "pending": counts["PENDING"],
-            "not_prequalified": counts["NONE"],
+            "unassessed": counts["UNASSESSED"],
         }
 
     return router

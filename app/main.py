@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.application.use_case import (
     CreateContractor,
     PrequalifyContractor,
@@ -17,6 +18,13 @@ from app.infrastructure.web.api import make_router
 def create_app() -> FastAPI:
     app = FastAPI(title="Contractly MVP")
 
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     repo = InMemoryContractorRepo()
     create_uc = CreateContractor(repo)
     list_uc = ListContractors(repo)
