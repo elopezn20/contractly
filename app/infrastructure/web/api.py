@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Dict
 from app.application.use_case import (
     CreateContractor,
@@ -12,11 +12,11 @@ router = APIRouter()
 
 
 class CreateContractorBody(BaseModel):
-    business_name: str = Field(..., min_length=1)
-    tax_id: str = Field(..., min_length=1)
-    main_contact: str = Field(..., min_length=1)
+    business_name: str | None = None
+    tax_id: str | None = None
+    main_contact: str | None = None
     certifications: List[str] = []
-    years_of_experience: int = Field(..., ge=0)
+    years_of_experience: int | None = None
 
 
 class ContractorOut(BaseModel):
@@ -54,7 +54,7 @@ def make_router(
                 years_of_experience=c.years_of_experience,
             )
         except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e))
+            raise HTTPException(status_code=422, detail=str(e))
 
     @router.get("/contractors", response_model=List[ContractorOut], status_code=200)
     def list_contractors():

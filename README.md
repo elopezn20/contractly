@@ -35,7 +35,9 @@ open http://127.0.0.1:8000/docs
 PYTHONPATH=. pytest -v
 ```
 
+### Frontend
 
+Se puede navegar una interfaz de usuario muy simple abriendo el archivo en frontend/index.html
 
 ## Decisiones de Arquitectura
 
@@ -47,9 +49,7 @@ PYTHONPATH=. pytest -v
 
 * **Domain (Core):** entidades (Contractor), value objects, reglas; puertos (interfaces) que expresan lo que el dominio necesita: `ContractorRepository`, `PrequalificationService`.
 * **Application (Use Cases):** orquesta casos de uso: `CreateContractor`, `ListContractors`, `RunPrequalification`, `GetSummary`.
-* **Adapters (Infra/Drivers):** implementan puertos: repositorio en memoria/SQLite, cliente del servicio externo (mock), controladores HTTP (FastAPI), mapeadores DTO.
 * **BFF (Backend for Frontend):** endpoint específico `/bff/summary` que agrega métricas para el front.
-
 
 
 ### 2) DIP + Repositorios (Inversión de Dependencias)
@@ -64,7 +64,7 @@ PYTHONPATH=. pytest -v
 
 ---
 
-## Endpoints (con ejemplos)
+## Endpoints
 
 ### 1) Crear contratista
 

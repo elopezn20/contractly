@@ -10,7 +10,7 @@ def test_post_contractors_201_and_body_shape():
         "tax_id": "12345678-9",
         "main_contact": "alice@acme.com",
         "certifications": ["ISO9001", "OSHA"],
-        "years_of_experience": 3,
+        "years_of_experience": 1,
     }
 
     resp = client.post("/contractors", json=payload)
@@ -28,7 +28,7 @@ def test_post_contractors_201_and_body_shape():
     assert body["business_name"] == "ACME"
     assert body["tax_id"] == "12345678-9"
     assert body["certifications"] == ["ISO9001", "OSHA"]
-    assert body["years_of_experience"] == 3
+    assert body["years_of_experience"] == 1
 
 
 def test_post_contractors_400_on_missing_field():
@@ -41,3 +41,26 @@ def test_post_contractors_400_on_missing_field():
     }
     resp = client.post("/contractors", json=bad_payload)
     assert resp.status_code == 422
+
+
+def test_post_prequalify_approve_contractor():
+    client = TestClient(create_app())
+
+    payload = {
+        "business_name": "ACME",
+        "tax_id": "12345678-9",
+        "main_contact": "alice@acme.com",
+        "certifications": ["ISO9001", "OSHA", "ABC123", "ISO9002"],
+        "years_of_experience": 4,
+    }
+
+    resp = client.post("/contractors", json=payload)
+    assert resp.status_code == 201
+    body = resp.json()
+    contractor_id = body["id"]
+
+    resp = client.post(f"/contractors/{contractor_id}/prequalify")
+    body = resp.json()
+    status = body["status"]
+
+    assert status == "APPROVED"

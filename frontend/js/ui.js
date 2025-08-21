@@ -112,7 +112,7 @@ function toast(msg, type = 'info') {
     if (!businessName.trim()) errors.push('Business name is required');
     if (!taxId.trim()) errors.push('Tax ID is required');
     if (!mainContact.trim()) errors.push('Primary contact is required');
-    if (!yearsOfExperience || yearsOfExperience < 0) errors.push('Years of experience must be 0 or greater');
+    if (yearsOfExperience < 0) errors.push('Years of experience must be 0 or greater');
     
     if (errors.length > 0) {
       toast(`Validation errors: ${errors.join(', ')}`, 'error');
