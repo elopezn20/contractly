@@ -47,19 +47,35 @@ Se puede navegar una interfaz de usuario muy simple abriendo el archivo en front
 
 **Capas:**
 
-* **Domain (Core):** entidades (Contractor), value objects, reglas; puertos (interfaces) que expresan lo que el dominio necesita: `ContractorRepository`, `PrequalificationService`.
-* **Application (Use Cases):** orquesta casos de uso: `CreateContractor`, `ListContractors`, `RunPrequalification`, `GetSummary`.
+* **Domain (Core):** entidades (Contractor), reglas; puertos (interfaces) que expresan lo que el dominio necesita: `ContractorRepository`, `PrequalificationService`.
+* **Application (Use Cases):** orquesta casos de uso: `CreateContractor`, `ListContractors`, `RunPrequalification`.
 * **BFF (Backend for Frontend):** endpoint específico `/bff/summary` que agrega métricas para el front.
 
 
 ### 2) DIP + Repositorios (Inversión de Dependencias)
 
-* Los casos de uso dependen de interfaces del repositorio y del servicio de precalificación, no de implementaciones concretas.
+* Los casos de uso dependen de interfaces del repositorio y del servicio de precalificación.
 
 ### 3) Modelado del Dominio
 
 * Entidad `Contractor`: `id`, `business_name`, `tax_id`, `main_contact`, `certifications: list[str]`, `years_of_experience: int`, `prequalification_status`.
 * Estados de precalificación: `UNASSESSED` (por defecto), `PENDING`, `APPROVED`, `REJECTED`.
+
+### Estructura
+
+
+- **`main.py`**: Punto de entrada del servidor. Monta los routers de `web/` y arranca FastAPI.
+- **`domain/contractor.py`**:  
+  - Define la **Entidad Contractor** con sus atributos (razón social, tax id, contacto, certificaciones, años de experiencia).  
+  - Define los **estados de precalificación**: `APPROVED`, `REJECTED`, `PENDING`, `UNASSESSED`.  
+  - Se encarga de las reglas de negocio puras, sin dependencias de frameworks.
+- **`application/`**:  
+  - Contiene los **casos de uso** (p. ej. crear contratista, lanzar precalificación, listar, obtener resumen).  
+  - Maneja la **evaluación de precalificación** coordinando con el servicio externo simulado.  
+  - Depende de **interfaces** (repositorios y servicios)
+- **`infrastructure/repositories/`**: Implementaciones concretas de persistencia (ejemplo: repositorio en memoria).
+- **`infrastructure/services/mock_prequalify.py`**: Servicio externo simulado de precalificación.  
+- **`web/api.py`**: Define los endpoints HTTP con FastAPI. Traduce las solicitudes/respuestas a casos de uso.
 
 
 ---
