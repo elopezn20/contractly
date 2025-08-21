@@ -26,26 +26,27 @@
       <h2 class="text-lg font-medium mb-4">Create Contractor</h2>
       <form id="createForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm text-zinc-600">Business Name</label>
-          <input name="businessName" class="w-full px-3 py-2 rounded-xl border bg-white"/>
+          <label class="block text-sm text-zinc-600">Business Name <span class="text-red-500">*</span></label>
+          <input name="businessName" class="w-full px-3 py-2 rounded-xl border bg-white" required/>
         </div>
         <div>
-          <label class="block text-sm text-zinc-600">Tax ID</label>
-          <input name="taxId" class="w-full px-3 py-2 rounded-xl border bg-white"/>
+          <label class="block text-sm text-zinc-600">Tax ID <span class="text-red-500">*</span></label>
+          <input name="taxId" class="w-full px-3 py-2 rounded-xl border bg-white" required/>
         </div>
         <div>
-          <label class="block text-sm text-zinc-600">Primary Contact</label>
-          <input name="primaryContact" class="w-full px-3 py-2 rounded-xl border bg-white"/>
+          <label class="block text-sm text-zinc-600">Primary Contact <span class="text-red-500">*</span></label>
+          <input name="primaryContact" class="w-full px-3 py-2 rounded-xl border bg-white" required/>
         </div>
         <div>
           <label class="block text-sm text-zinc-600">Certifications (comma‑separated)</label>
           <input name="certifications" class="w-full px-3 py-2 rounded-xl border bg-white" placeholder="ISO9001, OSHA"/>
         </div>
         <div>
-          <label class="block text-sm text-zinc-600">Years of Experience</label>
-          <input name="yearsOfExperience" class="w-full px-3 py-2 rounded-xl border bg-white" placeholder="3"/>
+          <label class="block text-sm text-zinc-600">Years of Experience <span class="text-red-500">*</span></label>
+          <input name="yearsOfExperience" class="w-full px-3 py-2 rounded-xl border bg-white" placeholder="3" required type="number" min="0"/>
         </div>
-        <div class="md:col-span-2 flex items-center justify-end gap-2">
+        <div class="md:col-span-2 flex items-center justify-between gap-2">
+          <p class="text-xs text-zinc-500"><span class="text-red-500">*</span> Required fields</p>
           <button id="btnCreate" type="button" class="px-4 py-2 rounded-xl border bg-white hover:bg-zinc-50">Create</button>
         </div>
       </form>

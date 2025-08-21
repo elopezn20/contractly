@@ -94,24 +94,42 @@ function toast(msg, type = 'info') {
     try {
       const summary = await api(ENDPOINTS.summary);
       renderSummary(summary);
-    } catch (_) {
-      // optional endpoint; ignore 404s, etc.
+    } catch (e) {
+      toast(e.message, 'error');
     }
   }
   
-  async function createContractor() {
+    async function createContractor() {
     const form = document.getElementById('createForm');
+    
+
+    const businessName = form.businessName.value || '';
+    const taxId = form.taxId.value || '';
+    const mainContact = form.primaryContact.value || '';
+    const yearsOfExperience = Number(form.yearsOfExperience.value) || 0;
+    
+    const errors = [];
+    if (!businessName.trim()) errors.push('Business name is required');
+    if (!taxId.trim()) errors.push('Tax ID is required');
+    if (!mainContact.trim()) errors.push('Primary contact is required');
+    if (!yearsOfExperience || yearsOfExperience < 0) errors.push('Years of experience must be 0 or greater');
+    
+    if (errors.length > 0) {
+      toast(`Validation errors: ${errors.join(', ')}`, 'error');
+      return;
+    }
+    
     const payload = {
-      business_name: form.businessName.value,
-      tax_id: form.taxId.value,
-      main_contact: form.primaryContact.value,
+      business_name: businessName || '',
+      tax_id: taxId || '',
+      main_contact: mainContact || '',
       certifications: (form.certifications.value || '')
         .split(',')
         .map(s => s.trim())
         .filter(Boolean),
-      years_of_experience: Number(form.yearsOfExperience.value)
+      years_of_experience: yearsOfExperience
     };
-  
+
     try {
       const c = await api(ENDPOINTS.create, {
         method: 'POST',
