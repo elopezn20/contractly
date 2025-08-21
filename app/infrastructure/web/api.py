@@ -26,6 +26,7 @@ class ContractorOut(BaseModel):
     main_contact: str
     certifications: List[str]
     status: PrequalificationStatus
+    years_of_experience: int
 
 
 def make_router(
@@ -50,6 +51,7 @@ def make_router(
                 main_contact=c.main_contact,
                 certifications=[cert.code for cert in c.certifications],
                 status=c.status,
+                years_of_experience=c.years_of_experience,
             )
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
@@ -64,6 +66,7 @@ def make_router(
                 tax_id=c.tax_id,
                 main_contact=c.main_contact,
                 certifications=[cert.code for cert in c.certifications],
+                years_of_experience=c.years_of_experience,
                 status=c.status,
             )
             for c in items
@@ -83,6 +86,7 @@ def make_router(
                 tax_id=c.tax_id,
                 main_contact=c.main_contact,
                 certifications=[cert.code for cert in c.certifications],
+                years_of_experience=c.years_of_experience,
                 status=c.status,
             )
         except ValueError as e:
@@ -101,7 +105,7 @@ def make_router(
         for c in items:
             counts[c.status.value] += 1
         return {
-            "total_registered": total,
+            "total": total,
             "approved": counts["APPROVED"],
             "rejected": counts["REJECTED"],
             "pending": counts["PENDING"],

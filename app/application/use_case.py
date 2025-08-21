@@ -16,7 +16,12 @@ class CreateContractor:
         certifications: List[str],
         years_of_experience: int,
     ) -> Contractor:
-        if not business_name or not tax_id or not main_contact:
+        if (
+            not business_name
+            or not tax_id
+            or not main_contact
+            or not years_of_experience
+        ):
             raise ValueError("business_name, tax_id and main_contact are required")
         contractor = Contractor.new(
             business_name,
